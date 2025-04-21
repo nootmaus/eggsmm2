@@ -3,7 +3,7 @@ Eggs Farm V1.0
 Author: scriptmausrb
 Created: 2025-04-21
 Updated by: nootmaus
-Last update: 2025-04-21 19:12:03 UTC
+Last update: 2025-04-21 19:21:55 UTC
 
 Description: Auto farm script for collecting coins in game
 ]]
@@ -144,6 +144,23 @@ local mapsList = {
     "PoliceStation", "ResearchFacility", "Hotel", "VampireCastle"
 }
 
+-- Функция проверки лобби
+local function isInLobby()
+    local lobbyMap = workspace:FindFirstChild("Lobby")
+    if lobbyMap and player.Character then
+        local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+        if humanoidRootPart then
+            for _, part in pairs(lobbyMap:GetDescendants()) do
+                if part:IsA("BasePart") and 
+                   (humanoidRootPart.Position - part.Position).Magnitude < 100 then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
 -- Функция очистки дебаунса
 local function clearCoinDebounce()
     table.clear(coinDebounce)
@@ -220,7 +237,7 @@ local autoFarmEnabled = false
 local farmThread = nil
 local characterConnection = nil
 
--- Основная функция фарма для персонажа
+-- Функция фарма для персонажа
 local function farmOnCharacter(character)
     if not character then return end
     
@@ -234,6 +251,12 @@ local function farmOnCharacter(character)
     end)
     
     while autoFarmEnabled do
+        -- Проверяем, находится ли игрок в лобби
+        if isInLobby() then
+            wait(1)
+            continue
+        end
+        
         if not character:IsDescendantOf(game.Workspace) then
             wait(1)
             continue
