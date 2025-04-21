@@ -211,7 +211,7 @@ local function tweenToCoin(humanoidRootPart, coin)
 
     local targetPos = Vector3.new(coin.Position.X, humanoidRootPart.Position.Y, coin.Position.Z)
     local distance = (humanoidRootPart.Position - targetPos).Magnitude
-    local walkSpeed = 24 -- Увеличенная скорость
+    local walkSpeed = 18 -- Увеличенная скорость
     local tweenTime = distance / (walkSpeed * 1.2)
 
     local success, _ = pcall(function()
